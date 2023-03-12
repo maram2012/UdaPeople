@@ -35,5 +35,7 @@ jobs:
           key: backend-build
 cleanup:
 workflows:
+  default:
+    jobs:
       - build-frontend
       - build-backend
