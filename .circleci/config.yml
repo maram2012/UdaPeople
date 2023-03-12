@@ -14,7 +14,6 @@ jobs:
             cd frontend
             npm install
             npm run build
-            exit 1
       - save_cache:
           paths: [frontend/node_modules]
           key: frontend-build
@@ -29,10 +28,8 @@ jobs:
           name: Back-end build
           command: |
              cd backend
-             npm login
              npm install
-             npm run start
-             exit 1
+             npm run build
       - save_cache:
           paths: [backend/node_modules]
           key: backend-build
