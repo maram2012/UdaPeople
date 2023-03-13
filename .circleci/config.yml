@@ -130,10 +130,10 @@ jobs:
       - checkout
       - add_ssh_keys:
           fingerprints: ["fb:19:f8:d4:32:e1:6d:0e:47:5a:aa:a1:34:ba:d4:72"]
-      - run:
-          name: "Install Dependencies"
-          command: |
-            apk add ansible gzip openssh-client
+      # - run:
+      #     name: "Install Dependencies"
+      #     command: |
+      #       apk add ansible gzip openssh-client
       - attach_workspace:
           at: ~/
       - run:
