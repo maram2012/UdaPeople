@@ -109,15 +109,15 @@ jobs:
           name: Install dependencies
           command: |
             yum install -y tar gzip
-      - run:
-          name: Ensure back-end infrastructure exists
-          command: |
-            aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5} \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --tags project=udapeople \
-              --region us-east-1
+      # - run:
+      #     name: Ensure back-end infrastructure exists
+      #     command: |
+      #       aws cloudformation deploy \
+      #         --template-file .circleci/files/backend.yml \
+      #         --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5} \
+      #         --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+      #         --tags project=udapeople \
+      #         --region us-east-1
 
       - persist_to_workspace:
           root: ~/
@@ -125,16 +125,11 @@ jobs:
             - project/.circleci/ansible/inventory.txt
   configure-infrastructure:
     docker:
-      - image: python:3.7-alpine3.11
+      - image: maramdocker/aws-node
     steps:
       - checkout
       - add_ssh_keys:
           fingerprints: ["fb:19:f8:d4:32:e1:6d:0e:47:5a:aa:a1:34:ba:d4:72"]
-      - run:
-          name: "Install Dependencies"
-          command: |
-              apk add openssh-client
-              apk add --update ansible
       - attach_workspace:
           at: ~/
       - run:
