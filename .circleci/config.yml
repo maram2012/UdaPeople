@@ -99,44 +99,29 @@ jobs:
              cd backend
              npm audit
 
+
   deploy-infrastructure:
-     docker:
-         - image: amazon/aws-cli
-     steps:
-       - checkout
-       - run:
-           name: install tar and gzip
-           command: yum install -y tar gzip
-       - run:
-           name: Ensure back-end infrastructure exists
-           command: |
-              aws cloudformation deploy \
-              --template-file .circleci/files/backend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region us-east-1 \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-       - run:
-          name: Ensure front-end infrastructure exist
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            yum install -y tar gzip
+      - run:
+          name: Ensure back-end infrastructure exists
           command: |
             aws cloudformation deploy \
-              --template-file .circleci/files/frontend.yml \
-              --tags project=udapeople \
-              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --region us-east-1 \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}"
-       - run:
-          name: Add back-end ip to ansible inventory
-          command: |
-            aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
+              --template-file .circleci/files/backend.yml \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5} \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --tags project=udapeople
 
-       - persist_to_workspace:
+      - persist_to_workspace:
           root: ~/
           paths:
             - project/.circleci/ansible/inventory.txt
-            
-      # Here's where you will add some code to rollback on failure 
-
 cleanup:
 workflows:
   default:
