@@ -84,7 +84,6 @@ jobs:
           name: Run scan frontend
           command: |
              cd frontend
-             cd frontend
              npm install
              npm audit fix
              npm audit fix --force --audit-level=critical
