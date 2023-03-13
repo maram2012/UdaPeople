@@ -23,7 +23,7 @@
 
 # Uncomment the following to enable insecure registries with Docker
 - name: ensure docker can use insecure registries in 10.11.0.0/16
- lineinfile: "dest=/etc/default/docker regexp=^DOCKER_OPTS line=DOCKER_OPTS='--insecure-registry 10.11.0.0/16'"
+  lineinfile: "dest=/etc/default/docker regexp=^DOCKER_OPTS line=DOCKER_OPTS='--insecure-registry 10.11.0.0/16'"
 
 # sudo usermod -aG docker root
 - name: "Add remote ubuntu user to docker group"
