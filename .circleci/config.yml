@@ -125,7 +125,7 @@ jobs:
             - project/.circleci/ansible/inventory.txt
   configure-infrastructure:
     docker:
-      - image: mareimorsy/aws-node
+      - image: maramdocker/aws-node
     steps:
       - checkout
       - add_ssh_keys:
