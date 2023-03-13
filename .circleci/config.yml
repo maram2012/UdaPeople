@@ -116,7 +116,6 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --region us-east-1 \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-              exit 1
        - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -126,12 +125,12 @@ jobs:
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --region us-east-1 \
               --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7}" 
-              exit 1
+
        - run:
           name: Add back-end ip to ansible inventory
           command: |
             aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text >> .circleci/ansible/inventory.txt
-            exit 1
+
        - persist_to_workspace:
           root: ~/
           paths:
