@@ -180,7 +180,7 @@ workflows:
       #     requires: [build-frontend]
       # - deploy-infrastructure
       #       requires: [build-frontend,build-backend]
-      - configure-infrastructure:
+      - configure-infrastructure
             #  requires: [deploy-infrastructure]
       - run-migrations:
           requires: [configure-infrastructure]      
