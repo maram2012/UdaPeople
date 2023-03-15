@@ -220,13 +220,12 @@ jobs:
             cd backend
             npm i
             npm run build
-      #create articate 
             tar -czf artifact.tar.gz dist/* package*
             cp artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
-     # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure  
 cleanup:
 workflows:
   default:
