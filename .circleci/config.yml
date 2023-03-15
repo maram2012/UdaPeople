@@ -192,19 +192,28 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install dependencies
-          command: |
-            # your code here
-      - run:
           name: Get backend url
           command: |
-            # your code here
-            export API_URL="http://${BACKEND_IP}:3030"
-            echo "${API_URL}"
+            export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo "API_URL"=http://$BACKEND_IP:3030" 
       - run:
           name: Deploy frontend objects
           command: |
-            # your code here
+            cd frontend
+            echo "API_URL"=http://$BACKEND_IP:3030" > .env
+      - run:
+          name: install dependencies 
+          command: |
+              npm install
+      - run:
+          name : build prod
+          command: |
+              npm run build:prod
+      - run:
+          name : upload files to s3 bucket
+          command: |
+               aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:5} --recursive
+            
       # Here's where you will add some code to rollback on failure      
                     
   deploy-backend:
@@ -217,9 +226,8 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-
-            export EC2_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            echo $EC2_IP >> .circleci/ansible/inventory.txt
+            export backendServerIP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo $backendServerIP >> .circleci/ansible/inventory.txt
             cd backend
             npm i
             npm run build
@@ -236,7 +244,6 @@ jobs:
             ls ../.circleci/ansible/roles/deploy/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # Here's where you will add some code to rollback on failure  
       # Here's where you will add some code to rollback on failure  
 cleanup:
 workflows:
@@ -258,7 +265,7 @@ workflows:
       #        requires: [deploy-infrastructure]
       # - run-migrations
       # #     requires: [configure-infrastructure]
-      # - deploy-frontend
+      - deploy-frontend
           # requires: [run-migrations]
-      - deploy-backend
+      # - deploy-backend
           # requires: [run-migrations]     
