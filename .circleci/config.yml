@@ -209,7 +209,7 @@ jobs:
                     
   deploy-backend:
     docker:
-      # Docker image here that supports Ansible
+      - image: maramdocker/aws-node
     steps:
       - checkout
       - add_ssh_keys:
