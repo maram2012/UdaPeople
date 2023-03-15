@@ -200,7 +200,7 @@ jobs:
           name: Deploy frontend objects
           command: |
             cd frontend
-            echo "API_URL"=http://$BACKEND_IP:3030" > .env
+            echo "API_URL=http://$BACKEND_IP:3030" > .env
       - run:
           name: install dependencies 
           command: |
