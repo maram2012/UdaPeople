@@ -201,15 +201,9 @@ jobs:
           command: |
             cd frontend
             echo "API_URL=http://$BACKEND_IP:3030" > .env
-      - run:
-          name: install dependencies 
-          command: |
-             npm install
-             npm run build
-      - run:
-          name : upload files to s3 bucket
-          command: |
-               aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:5} --recursive
+            npm install
+            npm run build
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:5} --recursive
             
       # Here's where you will add some code to rollback on failure      
                     
