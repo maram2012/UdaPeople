@@ -206,9 +206,9 @@ jobs:
           command: |
               npm install
       - run:
-          name : build prod
+          name : build
           command: |
-              npm run build:prod
+              npm run build
       - run:
           name : upload files to s3 bucket
           command: |
