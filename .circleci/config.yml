@@ -217,8 +217,8 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            export backendServerIP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            echo $backendServerIP >> .circleci/ansible/inventory.txt
+            export TYPEORM_HOST=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo $TYPEORM_HOST >> .circleci/ansible/inventory.txt
             cd backend
             npm i
             npm run build
@@ -232,8 +232,6 @@ jobs:
             echo "TYPEORM_MIGRATIONS=./dist/migrations/*.ts" >> .env
             tar -czf artifact.tar.gz dist/* package* .env
             cp artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
-            echo "Contents  of the inventory.txt file is -------"
-            cat inventory.txt
             ls ../.circleci/ansible/roles/deploy/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
