@@ -232,6 +232,8 @@ jobs:
             echo "TYPEORM_MIGRATIONS=./dist/migrations/*.ts" >> .env
             tar -czf artifact.tar.gz dist/* package* .env
             cp artifact.tar.gz ~/project/.circleci/ansible/roles/deploy/artifact.tar.gz
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
             ls ../.circleci/ansible/roles/deploy/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
@@ -240,24 +242,23 @@ cleanup:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend:
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      - deploy-infrastructure
-      #       requires: [build-frontend,build-backend]
-      # - configure-infrastructure:
-      #        requires: [deploy-infrastructure]
-      # - run-migrations
-      #     requires: [configure-infrastructure]
+      - build-frontend
+      - build-backend
+      - test-frontend:
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+            requires: [build-frontend,build-backend]
+      - configure-infrastructure:
+             requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
       - deploy-frontend:
-          # requires: [run-migrations]
-          requires: [deploy-infrastructure]
-      # - deploy-backend:
-      #     requires: [run-migrations]     
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]     
