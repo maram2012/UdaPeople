@@ -217,8 +217,8 @@ jobs:
       - run:
           name: Deploy backend
           command: |
-            export EC2_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
-            echo $EC2_IP >> .circleci/ansible/inventory.txt
+            export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo $BACKEND_IP >> .circleci/ansible/inventory.txt
             cd backend
             npm i
             npm run build
@@ -235,7 +235,31 @@ jobs:
             ls ../.circleci/ansible/roles/deploy/
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
+
+  smoke-test:
+    docker:
+      - image: maramdocker/aws-node
+    steps:
+      # - checkout
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+      - run:
+          name: Backend smoke test.
+          command: |
+              if curl BACKEND_IP/api/status" | grep "ok"
+                then
+                  return 0
+                else
+                  return 1
+                fi
+      # - run:
+      #     name: Frontend smoke test.
+      #     command: |
+      #       # your code here
+      # # Here's where you will add some code to rollback on failure         
 cleanup:
 workflows:
   default:
@@ -250,17 +274,17 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure
-            # requires: [build-frontend,build-backend]
-      - configure-infrastructure:
-             requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations]
-      - deploy-backend:
-          requires: [run-migrations]  
-      # - smoke-test
+      # - deploy-infrastructure
+      #       # requires: [build-frontend,build-backend]
+      # - configure-infrastructure:
+      #        requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations]
+      # - deploy-backend:
+      #     requires: [run-migrations]  
+      - smoke-test
           # requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
