@@ -246,16 +246,17 @@ jobs:
           name: Get backend url
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            backendUrl="http://$BACKEND_IP:3030/api/status"
       - run:
           name: Backend smoke test.
           command: |
-              if curl "BACKEND_IP/api/status" | grep "ok"
+              if curl -s $backendUrl | grep "ok"
               then
-                  echo "Smoke tests finished with success"
-                  exit 0
+                echo "Smoke tests finished with success"
+                exit 0
               else
-                  echo "Smoke tests finished with failure"
-                  exit 1
+                echo "Smoke tests finished with failure"
+                exit 1
               fi
       # - run:
       #     name: Frontend smoke test.
