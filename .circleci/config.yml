@@ -195,9 +195,6 @@ jobs:
           command: |
             export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "API_URL=http://$BACKEND_IP:3030" 
-      - run:
-          name: Add URL to .env and add files to s3
-          command: |
             cd frontend
             echo "API_URL=http://$BACKEND_IP:3030" > .env
             npm install
@@ -289,11 +286,11 @@ workflows:
       #        requires: [deploy-infrastructure]
       # - run-migrations:
       #     requires: [configure-infrastructure]
-      # - deploy-frontend:
+      - deploy-frontend
       #     requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]  
-      - smoke-test
+      # - smoke-test
           # requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
