@@ -250,11 +250,13 @@ jobs:
           name: Backend smoke test.
           command: |
               if curl BACKEND_IP/api/status" | grep "ok"
-                then
-                  return 0
-                else
-                  return 1
-                fi
+              then
+                  echo "Smoke tests finished with success"
+                  exit 0
+              else
+                  echo "Smoke tests finished with failure"
+                  exit 1
+              fi
       # - run:
       #     name: Frontend smoke test.
       #     command: |
