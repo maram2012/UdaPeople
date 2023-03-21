@@ -242,22 +242,19 @@ jobs:
       - image: maramdocker/aws-node
     steps:
       - run:
-          name: Get backend url
+          name: Run backend smoke tests
           command: |
             BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             backendUrl="http://$BACKEND_IP:3030/api/status"
             echo $backendUrl
-      - run:
-          name: Backend smoke test.
-          command: |
-              if curl -s $backendUrl | grep "ok"
-              then
-                echo "Smoke tests finished with success"
-                exit 0
-              else
-                echo "Smoke tests finished with failure"
-                exit 1
-              fi
+            if curl -s $backendUrl | grep "ok"
+            then
+              echo "Smoke tests finished with success"
+              exit 0
+            else
+              echo "Smoke tests finished with failure"
+              exit 1
+            fi
       # - run:
       #     name: Frontend smoke test.
       #     command: |
