@@ -175,7 +175,7 @@ jobs:
             npm install
             npm run premigrations
             npm run migrations > migrations_dump.txt
-            migrations_dump.txt
+            echo migrations_dump.txt
       - run:
           name: Send migration status kvdb.io
           command: |   
@@ -280,12 +280,12 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure
-            # requires: [build-frontend,build-backend]
-      - configure-infrastructure:
-             requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
+      # - deploy-infrastructure
+      #       # requires: [build-frontend,build-backend]
+      # - configure-infrastructure:
+      #        requires: [deploy-infrastructure]
+      - run-migrations
+          # requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations]
       - deploy-backend:
