@@ -196,7 +196,7 @@ jobs:
             export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
             echo "API_URL=http://$BACKEND_IP:3030" 
       - run:
-          name: Add URL to .env
+          name: Add URL to .env and add files to s3
           command: |
             cd frontend
             echo "API_URL=http://$BACKEND_IP:3030" > .env
@@ -240,23 +240,23 @@ cleanup:
 workflows:
   default:
     jobs:
-      # - build-frontend
-      # - build-backend
-      # - test-frontend
-      #     requires: [build-frontend]
-      # - test-backend:
-      #     requires: [build-backend]
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
-      # - deploy-infrastructure:
-      #       requires: [build-frontend,build-backend]
-      # - configure-infrastructure:
-      #        requires: [deploy-infrastructure]
-      # - run-migrations
-          # requires: [configure-infrastructure]
-      - deploy-frontend
-      #     requires: [run-migrations]
-      # - deploy-backend:
-      #     requires: [run-migrations]   
+      - build-frontend
+      - build-backend
+      - test-frontend
+          requires: [build-frontend]
+      - test-backend:
+          requires: [build-backend]
+      - scan-backend:
+          requires: [build-backend]
+      - scan-frontend:
+          requires: [build-frontend]
+      - deploy-infrastructure:
+            requires: [build-frontend,build-backend]
+      - configure-infrastructure:
+             requires: [deploy-infrastructure]
+      - run-migrations:
+          requires: [configure-infrastructure]
+      - deploy-frontend:
+          requires: [run-migrations]
+      - deploy-backend:
+          requires: [run-migrations]   
