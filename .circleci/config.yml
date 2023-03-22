@@ -265,6 +265,9 @@ jobs:
       #         return 1
       #       fi
 
+      - destroy-environment   
+      - revert-migrations 
+
       # Here's where you will add some code to rollback on failure         
 cleanup:
 workflows:
@@ -280,17 +283,17 @@ workflows:
       #     requires: [build-backend]
       # - scan-frontend:
       #     requires: [build-frontend]
-      - deploy-infrastructure
-            # requires: [build-frontend,build-backend]
-      - configure-infrastructure:
-             requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      - deploy-frontend:
-          requires: [run-migrations,deploy-backend]
-      - deploy-backend:
-          requires: [run-migrations]  
-      # - smoke-test
+      # - deploy-infrastructure
+      #       # requires: [build-frontend,build-backend]
+      # - configure-infrastructure:
+      #        requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      # - deploy-frontend:
+      #     requires: [run-migrations,deploy-backend]
+      # - deploy-backend:
+      #     requires: [run-migrations]  
+      - smoke-test
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
