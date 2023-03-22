@@ -1,11 +1,11 @@
 version: 2.1
 commands:
-  destroy-environment:
+   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
       Workflow_ID:
         type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:5}   
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
           name: Destroy environments
@@ -19,20 +19,19 @@ commands:
     parameters:
       workflow_id:
         type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:5}   
-
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
-        name: Revert migrations
-        when: on_fail
-        command: |
-          SUCCESS=$(curl --insecure  https://kvdb.io/42Nm39gyBqLu6kbpsYF7Xn/migration_<< parameters.workflow_id >>)
-          if (( $SUCCESS == 1 ));
-          then
-            cd ~/project/backend
-            npm install
-            npm run migration:revert
-          fi  
+          name: Revert migrations
+          when: on_fail
+          command: |
+            SUCCESS=$(curl --insecure https://kvdb.io/42Nm39gyBqLu6kbpsYF7Xn/migration_${parameters.workflow_id})
+            if (( $SUCCESS == 1 ));
+            then
+              cd ~/project/backend
+              npm install
+              npm run migration:revert
+            fi
 jobs:
   build-frontend:
     docker:
@@ -141,7 +140,7 @@ jobs:
           command: |
             aws cloudformation deploy \
               --template-file .circleci/files/backend.yml \
-              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:5} \
+              --parameter-overrides ID=${CIRCLE_WORKFLOW_ID:0:7} \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --tags project=udapeople \
               --region us-east-1
@@ -152,7 +151,7 @@ jobs:
               --template-file .circleci/files/frontend.yml \
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:5}" 
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}" 
     # Fetch the public IP of the EC2 instance and append it to the provided Ansible
       - run:
           name: Add back-end ip to ansible inventory
@@ -219,7 +218,7 @@ jobs:
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
-            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:5} --recursive
+            aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             
       # Here's where you will add some code to rollback on failure      
                     
