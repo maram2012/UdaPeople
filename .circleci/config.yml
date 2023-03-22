@@ -14,6 +14,25 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
             exit 1
+  revert-migrations:
+    description: Revert the last migration
+    parameters:
+      workflow_id:
+        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:5}   
+
+    steps:
+      - run:
+        name: Revert migrations
+        when: on_fail
+        command: |
+          SUCCESS=$(curl --insecure  https://kvdb.io/42Nm39gyBqLu6kbpsYF7Xn/migration_<< parameters.workflow_id >>)
+          if (( $SUCCESS == 1 ));
+          then
+            cd ~/project/backend
+            npm install
+            npm run migration:revert
+          fi  
 jobs:
   build-frontend:
     docker:
@@ -252,18 +271,18 @@ jobs:
               echo "Smoke tests finished with failure"
               exit 1
             fi
-      # - run:
-      #     name: Frontend smoke test.
-      #     command: |
-      #       URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
-      #       echo ${URL} 
-      #       if curl -s ${URL} | grep "Welcome"
-      #       then
-      #         # Change this to 0 after the job fails
-      #         return 1
-      #       else
-      #         return 1
-      #       fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+            URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-us-east-1.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+              # Change this to 0 after the job fails
+              return 1
+            else
+              return 1
+            fi
 
       - destroy-environment   
       - revert-migrations 
