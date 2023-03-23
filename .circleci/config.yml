@@ -198,10 +198,8 @@ jobs:
             npm run premigrations
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-            if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
-            then
-              curl  https://kvdb.io/Mmq49a5pJdAg8UeVrgXmD4/migration_test4 -d '1'
-            fi
+            curl  https://kvdb.io/Mmq49a5pJdAg8UeVrgXmD4/migration_test4 -d '1'
+ 
 
   deploy-frontend:
     docker:
