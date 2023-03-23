@@ -164,7 +164,7 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
   configure-infrastructure:
-  # Select a Docker image that supports Ansible
+       # Select a Docker image that supports Ansible
     docker:
       - image: maramdocker/aws-node
     steps:
@@ -181,7 +181,6 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt configure-server.yml -vv
       # Here's where you will add some code to rollback on failure  
-
   run-migrations:
     docker:
       - image: maramdocker/aws-node
@@ -204,8 +203,6 @@ jobs:
             then
              curl  https://kvdb.io/${KVDB_BUKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}   -d '1'
             fi 
- 
-
   deploy-frontend:
     docker:
       - image: maramdocker/aws-node
@@ -225,8 +222,7 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             
-      # Here's where you will add some code to rollback on failure      
-                    
+      # Here's where you will add some code to rollback on failure                       
   deploy-backend:
     docker:
       - image: maramdocker/aws-node
@@ -256,7 +252,6 @@ jobs:
             cd ../.circleci/ansible
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure
-
   smoke-test:
     docker:
       - image: maramdocker/aws-node
@@ -306,11 +301,11 @@ workflows:
           requires: [build-backend]
       - scan-frontend:
           requires: [build-frontend]
-      - deploy-infrastructure
+      - deploy-infrastructure:
             requires: [build-frontend,build-backend]
       - configure-infrastructure:
              requires: [deploy-infrastructure]
-      - run-migrations
+      - run-migrations:
           requires: [configure-infrastructure]
       - deploy-frontend:
           requires: [run-migrations,deploy-backend]
