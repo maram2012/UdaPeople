@@ -27,7 +27,7 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUKET}/migration_${parameters.Workflow_ID})
+            SUCCESS=$(curl --insecure https://kvdb.io/42Nm39gyBqLu6kbpsYF7Xn/migration_${parameters.Workflow_ID})
             if (( $SUCCESS == 0 ));
             then
               cd ~/project/backend
@@ -307,13 +307,15 @@ workflows:
       #       # requires: [build-frontend,build-backend]
       # - configure-infrastructure:
       #        requires: [deploy-infrastructure]
-      # - run-migrations:
+      - run-migrations:
       #     requires: [configure-infrastructure]
       # - deploy-frontend:
       #     requires: [run-migrations,deploy-backend]
       # - deploy-backend:
       #     requires: [run-migrations]  
-      - smoke-test
+      - smoke-test:
+          requires: [run-migrations]
+          
       #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
