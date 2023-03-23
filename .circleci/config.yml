@@ -192,12 +192,15 @@ jobs:
           name: Run migrations
           command: |
             cd backend
+            sudo apt update && sudo apt upgrade
+            sudo apt install curl
             npm install
             npm run premigrations
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
-            curl  https://kvdb.io/Mmq49a5pJdAg8UeVrgXmD4/migration_test5 -d '1'
+            curl  https://kvdb.io/${KVDB_BUKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}   -d '1'
  
+
   deploy-frontend:
     docker:
       - image: maramdocker/aws-node
