@@ -185,7 +185,7 @@ jobs:
 
   run-migrations:
     docker:
-      - image: maramdocker/aws-node
+      - image: cimg/node:13.8.0
     steps:
       - checkout
       - run:
@@ -198,7 +198,7 @@ jobs:
             cat migrations_dump.txt
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl -X POST https://kvdb.io/Mmq49a5pJdAg8UeVrgXmD4/migration_test3 -d '1'
+              curl  https://kvdb.io/Mmq49a5pJdAg8UeVrgXmD4/migration_test4 -d '1'
             fi
 
   deploy-frontend:
