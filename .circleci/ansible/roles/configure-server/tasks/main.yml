@@ -27,7 +27,6 @@
     state: present
 
 - name: Install Docker on Ubuntu
-  hosts: your_host_name
   become: true
 
   tasks:
