@@ -1,4 +1,11 @@
 ---
+- name: "Install aptitude."
+  become: true
+  apt:
+    name: aptitude
+    state: present
+    update_cache: yes
+
 - name: "upgrade packages."
   become: true
   apt:
