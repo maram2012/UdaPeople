@@ -50,14 +50,7 @@
     state: present
   tags:
     - docker
-- name: Set up the stable repository
-  remote_user: ubuntu
-  apt_repository:
-    repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu xenial stable
-    state: present
-    update_cache: yes
-  tags:
-    - docker
+
 - name: Update apt packages
   remote_user: ubuntu
   apt:
