@@ -21,12 +21,6 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            # sudo apt update && sudo apt upgrade
-            # sudo apt install curl
-            # SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUKET}/migration_<< parameters.Workflow_ID >>)
-            # echo $SUCCESS
-            # if (( $SUCCESS == 1 ));
-            # then
               cd ~/project/backend
               npm install
               npm run migration:revert
