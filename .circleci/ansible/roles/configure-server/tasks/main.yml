@@ -42,31 +42,31 @@
         state: present
 
     - name: Add Docker GPG key
-        apt_key:
-          url: https://download.docker.com/linux/ubuntu/gpg
-          state: present
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
 
     - name: Add Docker repository
-        apt_repository:
-          repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
-          state: present
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable
+        state: present
 
     - name: Update apt package cache
-        apt:
-          update_cache: yes
+      apt:
+        update_cache: yes
 
     - name: Install Docker
-        apt:
-          name: docker-ce
-          state: present
+      apt:
+        name: docker-ce
+        state: present
 
     - name: Add current user to Docker group
-        user:
-          name: "{{ ansible_user }}"
-          append: yes
-          groups: docker
+      user:
+        name: "{{ ansible_user }}"
+        append: yes
+        groups: docker
 
     - name: Start Docker service
-        service:
-          name: docker
-          state: started
+      service:
+        name: docker
+        state: started
