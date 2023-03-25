@@ -1,0 +1,32 @@
+---
+# Update package list and upgrade packages
+- name: Update and upgrade packages
+  apt:
+    update_cache: yes
+    upgrade: dist
+
+# Install nodejs and npm
+- name: Install nodejs and npm
+  apt:
+    name:
+      - nodejs
+      - npm
+    state: latest
+    update_cache: yes
+
+# Install pm2
+- name: Install pm2
+  npm:
+    name: pm2
+    global: yes
+    state: present
+    executable: npm
+  become: yes
+
+# Install Docker
+- name: "install docker."
+  become: true
+  apt:
+    name: ["docker.io"]
+    state: latest
+    update_cache: yes
