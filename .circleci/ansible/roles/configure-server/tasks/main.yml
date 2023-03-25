@@ -26,8 +26,6 @@
     production: yes
     state: present
 
-- name: Install Docker on Ubuntu
-  become: true
 
   tasks:
     - name: Install dependencies
