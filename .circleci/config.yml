@@ -294,17 +294,24 @@ jobs:
 
   cloudfront-update:
     docker:
-      - image: maramdocker/aws-node
+      - image: mareimorsy/aws-node
     steps:
       - checkout
       - run:
-          name: Send old workflow id to kvdb.io
+          name: Save Old Workflow ID to kvdb.io
           command: |
             export OLD_WORKFLOW_ID=$(aws cloudformation \
-                    list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-                    --no-paginate --output text)
+                      list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
+                      --no-paginate --output text)
             echo "Old Wokflow ID: $OLD_WORKFLOW_ID"
             curl -k https://kvdb.io/${KVDB_BUKET}/old_workflow_id -d "${OLD_WORKFLOW_ID}"
+      - run:
+          name: Update cloudfront distribution
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/cloudfront.yml \
+              --parameter-overrides WorkflowID="${CIRCLE_WORKFLOW_ID:0:5}" \
+              --stack-name InitialStack
       - run:
           name: Update cloudfront distribution
           command: |
@@ -330,10 +337,12 @@ jobs:
             echo Stack names: "${STACKS[@]}"
             export OldWorkflowID=$(curl --insecure https://kvdb.io/Tj7PoaYavbSYt98JqCgQtH/old_workflow_id)
             echo Old Workflow ID: $OldWorkflowID 
-            aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
-            aws cloudformation delete-stack --stack-name "backend-${OldWorkflowID}"
-            aws cloudformation delete-stack --stack-name "frontend-${OldWorkflowID}"
-            echo "delete is confirmed"
+            if [[ "${STACKS[@]}" =~ "${OldWorkflowID}" ]]
+            then
+              aws s3 rm "s3://udapeople-${OldWorkflowID}" --recursive
+              aws cloudformation delete-stack --stack-name "backend-${OldWorkflowID}"
+              aws cloudformation delete-stack --stack-name "frontend-${OldWorkflowID}"
+            fi
 
 workflows:
   default:
@@ -361,10 +370,10 @@ workflows:
       #     requires: [run-migrations]
       # - deploy-backend:
       #     requires: [run-migrations]
-      # # # - smoke-test
-      # # #     requires: [deploy-backend, deploy-frontend]
+      # # # # - smoke-test
+      # # # #     requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
-      # #     # requires: [smoke-test]
+      # # #     # requires: [smoke-test]
       #     requires: [deploy-backend, deploy-frontend]
       - cleanup
           # requires: [cloudfront-update]
