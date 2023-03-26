@@ -27,8 +27,6 @@ commands:
     #           npm run migration:revert
     
   revert-migrations:
-    docker:
-      - image: maramdocker/aws-node
     steps:
       - checkout
       - run:
