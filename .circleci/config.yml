@@ -10,28 +10,36 @@ commands:
             aws cloudformation delete-stack --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}
             aws s3 rm s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
             aws cloudformation delete-stack --stack-name udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}
+ 
+  # revert-migrations:
+    # description: Revert the last migration
+    # parameters:
+    #   Workflow_ID:
+    #     type: string
+    #     default: ${CIRCLE_WORKFLOW_ID:0:7}
+    # steps:
+    #   - run:
+    #       name: Revert migrations
+    #       when: on_fail
+    #       command: |
+    #           cd ~/project/backend
+    #           npm install
+    #           npm run migration:revert
+    
   revert-migrations:
-    description: Revert the last migration
-    parameters:
-      Workflow_ID:
-        type: string
-        default: ${CIRCLE_WORKFLOW_ID:0:7}
+    docker:
+      - image: maramdocker/aws-node
     steps:
+      - checkout
       - run:
-          name: Revert migrations
-          when: on_fail
+          name: Revert the last migration
           command: |
-              cd ~/project/backend
-              npm install
-              npm run migrations:revert
-              echo "Migrations reverted."
-      - run: 
-            name: Debug
-            command: |
-              echo "KVDB_BUKET=$KVDB_BUKET"
-              echo "Workflow_ID=${parameters.Workflow_ID}"
-              SUCCESS=$(curl --insecure  https://kvdb.io/${KVDB_BUKET}/migration_${parameters.Workflow_ID})
-              echo "SUCCESS=$SUCCESS"
+            cd backend
+            npm install
+            npm run migrations:revert
+            echo "revert migrations is done ! "
+
+
 
 jobs:
   build-frontend:
