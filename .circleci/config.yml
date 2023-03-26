@@ -208,15 +208,7 @@ jobs:
               curl --insecure https://kvdb.io/${KVDB_BUKET}/migration_${CIRCLE_WORKFLOW_ID:0:7}   -d '1'
               echo "curl command completed."
             fi 
-      - run: 
-          name: Debug
-          command: |
-            echo "KVDB_BUCKET=$KVDB_BUKET"
-            echo "CIRCLE_WORKFLOW_ID=$CIRCLE_WORKFLOW_ID"
-            echo "Checking migrations_dump.txt ..."
-            cat ~/project/backend/migrations_dump.txt
-            echo "Result of grep command:"
-            grep "has been executed successfully." ~/project/backend/migrations_dump.txt
+
 
 
   deploy-frontend:
@@ -349,31 +341,31 @@ jobs:
 workflows:
   default:
     jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires: [build-frontend]
-      - test-backend:
-          requires: [build-backend]
-      - scan-backend:
-          requires: [build-backend]
-      - scan-frontend:
-          requires: [build-frontend]
-      - deploy-infrastructure:
-          requires: [test-frontend, test-backend, scan-frontend, scan-backend]
-          # filters:
-          #   branches:
-          #     only: [test-feature-branch]
-      - configure-infrastructure:
-          requires: [deploy-infrastructure]
-      - run-migrations:
-          requires: [configure-infrastructure]
-      # - deploy-frontend:
+      # - build-frontend
+      # - build-backend
+      # - test-frontend:
+      #     requires: [build-frontend]
+      # - test-backend:
+      #     requires: [build-backend]
+      # - scan-backend:
+      #     requires: [build-backend]
+      # - scan-frontend:
+      #     requires: [build-frontend]
+      # - deploy-infrastructure:
+      #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+      #     # filters:
+      #     #   branches:
+      #     #     only: [test-feature-branch]
+      # - configure-infrastructure:
+      #     requires: [deploy-infrastructure]
+      # - run-migrations:
+      #     requires: [configure-infrastructure]
+      - deploy-frontend:
       #     requires: [run-migrations]
-      # - deploy-backend:
+      - deploy-backend:
       #     requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
