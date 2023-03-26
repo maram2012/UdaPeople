@@ -27,7 +27,8 @@ commands:
             if [ "$SUCCESS" = "1" ];
             then
               pwd
-              cd backend
+              cd ~/project/backend
+              pwd
               npm install
               npm run migrations:revert
             fi
