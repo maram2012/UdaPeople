@@ -195,8 +195,6 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-        # sudo apt update && sudo apt upgrade
-        # sudo apt install curl
             npm install
             npm run migrations:revert
         # npm run premigrations
