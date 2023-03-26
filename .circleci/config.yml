@@ -17,7 +17,6 @@ commands:
         type: string
         default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
-      - checkout
       - run:
           name: Revert migrations
           when: on_fail
@@ -27,8 +26,7 @@ commands:
             # Logic for reverting the database state
             if [ "$SUCCESS" = "1" ];
             then
-              pwd
-              ls
+
               cd ~/project/backend
               npm install
               npm run migrations:revert
@@ -262,6 +260,7 @@ jobs:
     docker:
       - image: maramdocker/aws-node
     steps:
+      - checkout
       - run:
           name: Run backend smoke tests
           command: |
