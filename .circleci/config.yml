@@ -27,14 +27,15 @@ commands:
     #           npm run migration:revert
     
   revert-migrations:
-    steps:
-      - run:
-          name: Revert the last migration
-          command: |
-            cd backend
-            npm install
-            npm run migrations:revert
-            echo "revert migrations is done ! "
+      description: Revert the last migration
+      steps:
+        - run:
+            name: Revert the last migration
+            command: |
+              cd backend
+              npm install
+              npm run migrations:revert
+              echo "revert migrations is done ! "
 
 
 
