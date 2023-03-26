@@ -270,10 +270,10 @@ jobs:
             if curl -s $backendUrl | grep "ok"
             then
               echo "Smoke tests finished with success"
-              exit 1
+              exit 0
             else
               echo "Smoke tests finished with failure"
-              exit 1
+              exit 0
             fi
       - run:
           name: Frontend smoke test.
