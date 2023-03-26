@@ -28,7 +28,6 @@ commands:
     
   revert-migrations:
     steps:
-      - checkout
       - run:
           name: Revert the last migration
           command: |
@@ -291,7 +290,7 @@ jobs:
               return 0
             fi
 
-      # - destroy-environment   
+      - destroy-environment   
       - revert-migrations 
 
       # Here's where you will add some code to rollback on failure    
