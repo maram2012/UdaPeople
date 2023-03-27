@@ -4,5 +4,5 @@ https://github.com/maram2012/UdaPeople
 
 
 2.Public URL for your S3 Bucket (aka, your green candidate front-end) [URL02]
-http://udapeople-e46cf98.s3-website-us-east-1.amazonaws.com/#/employees
+http://udapeople-8c62a7c.s3-website-us-east-1.amazonaws.com
 
